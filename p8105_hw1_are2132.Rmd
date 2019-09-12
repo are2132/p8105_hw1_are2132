@@ -1,28 +1,43 @@
 ---
 title: "p8105_hw1_are2132"
+author: "Alison Elgass"
 output: github_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+# Problem 1
+First we create a dataframe with 4 vectors
+
+```{r createdf1}
+library(tidyverse)
+df1 = tibble(
+  normSamp = rnorm(8),                    #normal sample
+  logicVect = normSamp > 0,               #logical
+  charVect = character(length = 8),       #character
+  factorVect = factor(c(1,2,3,1,2,3,1,2)) #factor
+)
 ```
 
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+Use the as.numeric function to convert vectors
+```{r convert, eval=FALSE}
+a = as.numeric(pull(df1,logicVect))
+b = as.numeric(pull(df1,charVect))
+c = as.numeric(pull(df1,factorVect))
 ```
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+Convert logical vector 3 ways,then multiply by random sample
+```{r prob1math}
+as.numeric(pull(df1,logicVect))*pull(df1,normSamp)
+as.factor(pull(df1,logicVect))*pull(df1,normSamp)
+as.numeric(as.factor(pull(df1,logicVect)))*pull(df1,normSamp)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+# Problem 2
+First we create a dataframe with 5 vectors
+```{r createdf2}
+df2 = tibble(
+  x = rnorm(500),
+  y = rnorm(500),
+  grtr1 = (x+y) > 1
+)
+```
+
