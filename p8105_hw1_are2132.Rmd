@@ -10,25 +10,25 @@ First we create a dataframe with 4 vectors
 ```{r createdf1}
 library(tidyverse)
 df1 = tibble(
-  normSamp = rnorm(8),                    #normal sample
-  logicVect = normSamp > 0,               #logical
-  charVect = character(length = 8),       #character
-  factorVect = factor(c(1,2,3,1,2,3,1,2)) #factor
+  normSamp = rnorm(8),                     #normal sample
+  logicVect1 = normSamp > 0,               #logical
+  charVect1 = character(length = 8),       #character
+  factorVect1 = factor(c(1,2,3,1,2,3,1,2)) #factor
 )
 ```
 
 Use the as.numeric function to convert vectors
 ```{r convert, eval=FALSE}
-a = as.numeric(pull(df1,logicVect))
-b = as.numeric(pull(df1,charVect))
-c = as.numeric(pull(df1,factorVect))
+a = as.numeric(pull(df1,logicVect1))
+b = as.numeric(pull(df1,charVect1))
+c = as.numeric(pull(df1,factorVect1))
 ```
 
-Convert logical vector 3 ways,then multiply by random sample
+Convert logical vector 3 ways, then multiply by random sample
 ```{r prob1math}
-as.numeric(pull(df1,logicVect))*pull(df1,normSamp)
-as.factor(pull(df1,logicVect))*pull(df1,normSamp)
-as.numeric(as.factor(pull(df1,logicVect)))*pull(df1,normSamp)
+as.numeric(pull(df1,logicVect1))*pull(df1,normSamp)
+as.factor(pull(df1,logicVect1))*pull(df1,normSamp)
+as.numeric(as.factor(pull(df1,logicVect1)))*pull(df1,normSamp)
 ```
 
 # Problem 2
@@ -37,7 +37,20 @@ First we create a dataframe with 5 vectors
 df2 = tibble(
   x = rnorm(500),
   y = rnorm(500),
-  grtr1 = (x+y) > 1
+  logicVect2 = (x + y) > 1,
+  numerVect2 = as.numeric(logicVect2),
+  factorVect2 = as.factor(logicVect2)
 )
+```
+
+The dataset `df2` has `r nrow(df2)` rows and `r ncol(df2)` columns  
+The mean of `x` is `r mean(pull(df2,x))`  
+The median of `x` is `r median(pull(df2,x))`  
+The standard deviation of `x` is `r sd(pull(df2,x))`  
+The proportion of cases for which x + y > 1 is
+`r sum(pull(df2,logicVect2))/nrow(df2)`
+
+```{r scatterplot}
+ggplot(df2, aes(x = x,y = y, color=logicVect2)) + geom_point()
 ```
 
