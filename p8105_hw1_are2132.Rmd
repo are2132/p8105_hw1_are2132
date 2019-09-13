@@ -5,52 +5,99 @@ output: github_document
 ---
 
 # Problem 1
-First we create a dataframe with 4 vectors
+First we create a dataframe `df1` with 4 vectors, 
+each of size 8  
+Each vector utilizes a different variable type
 
 ```{r createdf1}
 library(tidyverse)
 df1 = tibble(
-  normSamp = rnorm(8),                     #normal sample
-  logicVect1 = normSamp > 0,               #logical
-  charVect1 = character(length = 8),       #character
-  factorVect1 = factor(c(1,2,3,1,2,3,1,2)) #factor
+  normSamp = rnorm(8),                      #normal sample
+  logicVect1 = normSamp > 0,                #logical
+  charVect1 = character(length = 8),        #character
+  factorVect1 = factor(c(1,2,3,1,2,3,1,2))  #factor
 )
 ```
 
-Use the as.numeric function to convert vectors
+## Changing types
+Next we use the as.numeric() function to convert vectors
 ```{r convert, eval=FALSE}
 a = as.numeric(pull(df1,logicVect1))
 b = as.numeric(pull(df1,charVect1))
 c = as.numeric(pull(df1,factorVect1))
 ```
+This exercise shows that the logical and factor vectors can be converted into numerical vectors (a and c) from which we can take their mean, but the character vector cannot (vector b shows just 8 'NA's)  
 
-Convert logical vector 3 ways, then multiply by random sample
+## Some multiplication
+Now we convert the logical vector 3 ways, then multiply by our random sample
 ```{r prob1math}
 as.numeric(pull(df1,logicVect1))*pull(df1,normSamp)
 as.factor(pull(df1,logicVect1))*pull(df1,normSamp)
 as.numeric(as.factor(pull(df1,logicVect1)))*pull(df1,normSamp)
 ```
+Again, we see that in the middle example above we _cannot_ 
+get a reasonable numerical output since we are attempting 
+to multiply a numeric by a factor  
+
 
 # Problem 2
-First we create a dataframe with 5 vectors
+First we create a dataframe `df2` with 5 vectors
 ```{r createdf2}
 df2 = tibble(
-  x = rnorm(500),
+  x = rnorm(500), #sample 500 from normal
   y = rnorm(500),
   logicVect2 = (x + y) > 1,
   numerVect2 = as.numeric(logicVect2),
   factorVect2 = as.factor(logicVect2)
 )
 ```
-
+In summary,  
 The dataset `df2` has `r nrow(df2)` rows and `r ncol(df2)` columns  
 The mean of `x` is `r mean(pull(df2,x))`  
 The median of `x` is `r median(pull(df2,x))`  
 The standard deviation of `x` is `r sd(pull(df2,x))`  
-The proportion of cases for which x + y > 1 is
+The proportion of cases for which `x + y > 1` is
 `r sum(pull(df2,logicVect2))/nrow(df2)`
 
-```{r scatterplot}
-ggplot(df2, aes(x = x,y = y, color=logicVect2)) + geom_point()
+## Scatterplot 1
+
+```{r scatterplot1}
+ggplot(df2, aes(x = x, y = y, color = logicVect2)) + geom_point()
 ```
+    
+This scatterplot shows y vs. x from our dataframe `df2`  
+The color of each point corresponds to the value of the logical vector for the (x,y) pair. The point is  
+  
+*  Blue if `(x+y) > 1` or `logicVect2 = TRUE`  
+*  Red if `(x+y) <= 1` or `logicVect2 = FALSE`  
+  
+  
+We'll also **save this plot** to the R project as a 
+jpeg file
+```{r saveplot1}
+plot1 = ggplot(df2, aes(x = x, y = y, color = numerVect2)) + geom_point()
+ggsave("scatter_plot.jpeg", plot1)
+```
+  
+## Scatterplot 2
+```{r scatterplot2}
+ggplot(df2, aes(x = x, y = y, color = numerVect2)) + geom_point()
+```
+  
+In this plot, each point is  
+  
+*  Blue if `(x+y) > 1` or `numerVect2 = 1`  
+*  Red if `(x+y) <= 1` or `numerVect2 = 0`  
+  
+## Scatterplot 3
+```{r scatterplot3}
+ggplot(df2, aes(x = x, y = y, color = factorVect2)) + geom_point()
+```
+  
+In this plot, each point is  
+  
+*  Blue if `(x+y) > 1` or `factorVect2 = TRUE`  
+*  Red if `(x+y) <= 1` or `factorVect2 = FALSE` 
+  
+
 
