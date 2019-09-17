@@ -1,6 +1,7 @@
 ---
 title: "p8105_hw1_are2132"
 author: "Alison Elgass"
+date: 2019-09-15
 output: github_document
 ---
 
